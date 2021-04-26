@@ -15,7 +15,9 @@ import com.example.activitiescommunication.R;
 import com.example.activitiescommunication.model.CustomMessage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.message_edittext)
     EditText textMessage;
 
+    public static List<CustomMessage> sentMessages = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,11 +46,13 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
+
     public static final int REQUEST_CODE = 777;
     @OnClick(R.id.sendMessage_button)
     public void onClick(View view){
         String timeStamp = new SimpleDateFormat("HH:mm", Locale.US).format(new Date());
         CustomMessage customMessage = new CustomMessage(timeStamp, textMessage.getText().toString());
+        sentMessages.add(customMessage);
 
         Intent intent = new Intent(this, ReplyActivity.class);
 
@@ -60,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(REQUEST_CODE == requestCode){
-            String message = data.getStringExtra(READ_KEY);
-            viewMessage.setText(message);
+        for(CustomMessage sentMessage : sentMessages) {
+            if (REQUEST_CODE == requestCode) {
+                String message = data.getStringExtra(READ_KEY);
+                viewMessage.setText(message);
+            }
         }
     }
 }

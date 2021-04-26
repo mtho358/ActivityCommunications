@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.example.activitiescommunication.view.MainActivity.REQUEST_CODE;
+import static com.example.activitiescommunication.view.MainActivity.sentMessages;
 
 public class ReplyActivity extends AppCompatActivity {
 
@@ -56,10 +57,23 @@ public class ReplyActivity extends AppCompatActivity {
     public void onClick(View view) {
         String timeStamp = new SimpleDateFormat("HH:mm", Locale.US).format(new Date());
         CustomMessage customMessage = new CustomMessage(timeStamp, textMessage.getText().toString());
+        sentMessages.add(customMessage);
 
         Intent intent = new Intent();
         intent.putExtra(READ_KEY, customMessage);
         setResult(REQUEST_CODE, intent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        for(CustomMessage sentMessage : sentMessages) {
+            if (REQUEST_CODE == requestCode) {
+                String message = data.getStringExtra(READ_KEY);
+                viewMessage.setText(message);
+            }
+        }
     }
 }
