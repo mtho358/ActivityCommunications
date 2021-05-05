@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.example.activitiescommunication.view.MainActivity.REQUEST_CODE;
-import static com.example.activitiescommunication.view.MainActivity.sentMessages;
+import static com.example.activitiescommunication.view.MainActivity.messages;
 
 public class ReplyActivity extends AppCompatActivity {
 
@@ -45,8 +46,11 @@ public class ReplyActivity extends AppCompatActivity {
 
         CustomMessage message = (CustomMessage) getIntent().getSerializableExtra(READ_KEY);
 
-        if (message != null) {
-            viewMessage.setText(message.getMessage() + " " + message.getTimeStamp());
+        for(int i = 0; i < messages.size(); i++) {
+            if (messages.get(i) != null) {
+                Log.d("TAG_M", messages.get(i).getSenderName() + ": " + messages.get(i).getMessage());
+                viewMessage.setText(messages.get(i).toString());
+            }
         }
 
     }
@@ -56,12 +60,17 @@ public class ReplyActivity extends AppCompatActivity {
     @OnClick(R.id.sendMessage_button)
     public void onClick(View view) {
         String timeStamp = new SimpleDateFormat("HH:mm", Locale.US).format(new Date());
-        CustomMessage customMessage = new CustomMessage(timeStamp, textMessage.getText().toString());
-        sentMessages.add(customMessage);
+        CustomMessage customMessage = new CustomMessage(timeStamp, "Alexa", textMessage.getText().toString());
 
-        Intent intent = new Intent();
+        messages.add(customMessage);
+
+        Intent intent = new Intent(this, MainActivity.class);
+
         intent.putExtra(READ_KEY, customMessage);
         setResult(REQUEST_CODE, intent);
+
+        Toast.makeText(this, "Message Sent", Toast.LENGTH_SHORT).show();
+        startActivityForResult(intent, REQUEST_CODE);
         finish();
     }
 
@@ -69,11 +78,9 @@ public class ReplyActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        for(CustomMessage sentMessage : sentMessages) {
             if (REQUEST_CODE == requestCode) {
                 String message = data.getStringExtra(READ_KEY);
                 viewMessage.setText(message);
             }
-        }
     }
 }

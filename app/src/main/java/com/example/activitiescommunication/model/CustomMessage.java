@@ -5,19 +5,18 @@ import java.io.Serializable;
 public class CustomMessage implements Serializable {
 
     private String timeStamp;
+    private String senderName;
     private String message;
 
-    public CustomMessage(String timeStamp, String message) {
+    public CustomMessage(String timeStamp, String senderName, String message) {
         this.timeStamp = timeStamp;
+        this.senderName = senderName;
         this.message = message;
     }
 
     @Override
     public String toString() {
-        return "CustomMessage{" +
-                "timeStamp='" + timeStamp + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+        return timeStamp + " " + senderName + ": " + message;
     }
 
     public String getTimeStamp() {
@@ -34,5 +33,13 @@ public class CustomMessage implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 }

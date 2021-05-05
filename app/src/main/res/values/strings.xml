@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Activities Communication</string>
+    <string name="send_message">Send</string>
 </resources>

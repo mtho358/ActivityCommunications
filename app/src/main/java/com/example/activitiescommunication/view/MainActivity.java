@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,18 +33,30 @@ public class MainActivity extends AppCompatActivity {
     AppCompatButton sendMessage;
 
     @BindView(R.id.message_textview)
-        TextView viewMessage;
+    TextView viewMessage;
 
     @BindView(R.id.message_edittext)
     EditText textMessage;
 
-    public static List<CustomMessage> sentMessages = new ArrayList<>();
+    public static List<CustomMessage> messages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        CustomMessage message = (CustomMessage) getIntent().getSerializableExtra(READ_KEY);
+
+        for(int i = 0; i < messages.size(); i++) {
+            StringBuilder messagesString = new StringBuilder();
+            if (messages.get(i) != null) {
+                messagesString.append(messages.get(i).toString() + "\n");
+
+                Log.d("TAG_M", messages.get(i).getSenderName() + ": " + messages.get(i).getMessage());
+                viewMessage.setText(messagesString.toString() + "\n");
+            }
+        }
     }
 
 
@@ -51,8 +64,9 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.sendMessage_button)
     public void onClick(View view){
         String timeStamp = new SimpleDateFormat("HH:mm", Locale.US).format(new Date());
-        CustomMessage customMessage = new CustomMessage(timeStamp, textMessage.getText().toString());
-        sentMessages.add(customMessage);
+        CustomMessage customMessage = new CustomMessage(timeStamp, "Serie", textMessage.getText().toString());
+
+        messages.add(customMessage);
 
         Intent intent = new Intent(this, ReplyActivity.class);
 
@@ -66,11 +80,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        for(CustomMessage sentMessage : sentMessages) {
             if (REQUEST_CODE == requestCode) {
                 String message = data.getStringExtra(READ_KEY);
                 viewMessage.setText(message);
             }
-        }
     }
 }
