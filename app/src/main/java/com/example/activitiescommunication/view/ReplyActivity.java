@@ -45,11 +45,12 @@ public class ReplyActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         CustomMessage message = (CustomMessage) getIntent().getSerializableExtra(READ_KEY);
+        StringBuilder messagesString = new StringBuilder();
 
         for(int i = 0; i < messages.size(); i++) {
             if (messages.get(i) != null) {
-                Log.d("TAG_M", messages.get(i).getSenderName() + ": " + messages.get(i).getMessage());
-                viewMessage.setText(messages.get(i).toString());
+                messagesString.append(messages.get(i).toString()).append("\n");
+                viewMessage.setText(messagesString.toString());
             }
         }
 

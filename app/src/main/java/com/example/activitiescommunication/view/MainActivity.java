@@ -47,14 +47,12 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         CustomMessage message = (CustomMessage) getIntent().getSerializableExtra(READ_KEY);
+        StringBuilder messagesString = new StringBuilder();
 
         for(int i = 0; i < messages.size(); i++) {
-            StringBuilder messagesString = new StringBuilder();
             if (messages.get(i) != null) {
-                messagesString.append(messages.get(i).toString() + "\n");
-
-                Log.d("TAG_M", messages.get(i).getSenderName() + ": " + messages.get(i).getMessage());
-                viewMessage.setText(messagesString.toString() + "\n");
+                messagesString.append(messages.get(i).toString()).append("\n");
+                viewMessage.setText(messagesString.toString());
             }
         }
     }
